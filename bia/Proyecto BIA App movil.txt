@@ -1,0 +1,43 @@
+Proyecto BIA
+App móvil para el control de material de bodega que sea moderno y minimalista. Se desea integrar un chat con IA para el control de bodega. Se solicita la autenticación de los usuarios para el control . Se puede de también la posibilidad de escanear los códigos de los materiales utilizando la cámara del móvil para sus consultas o registros. Complementar este punto con códigos QR si es necesario.
+
+Roles de usuario para BIA:
+Admin: Crea bodegas, Crea usuarios, crea productos. Asigna personal a bodegas. 
+Editor: Asignado a una bodega, crea usuarios y productos.
+User: Asignado a una bodega, crea productos.
+Estos niveles de usuario son solo referenciales. Se debe buscar la mejor opción.
+
+Tecnologías
+Flutter 
+Firebase 
+Openrouter para el fácil uso de modelos de IA.
+Asistente de Programación con IA (cline, gémini cli, copilot o similar).
+Se usara un model IA que tenga el equilibrio 
+
+Página de chat
+Página clave. Aquí el usuario podrá solicitar:
+Consultas de materiales.
+Reportes básicos.
+Análisis.
+Cualquier otras opciones que sean útiles para la actividad.
+
+Página principal (Dashboard):
+Página de bienvenida para el usuario. Se mostrarán los gráficos y reportes más relevantes:
+Últimos 3 o 5 movimientos de productos.
+Estadística de Materiales más solicitados.
+Estadística de Materiales con menos stock/más stock.
+Cualquier otra opción que sea útil.
+
+Página de buscador 
+Página de todo el material y su búsqueda. Se muestra la bodega asignada al usuario solamente. Los administradores pueden ver todas las bodegas.
+
+Botón ingresar (+)
+Botón para la acción de:
+Escanear con la cámara. Si el material existe , muestra sus datos relevantes y consulta si se debe modificar el stock. Si el material no existe da las opciones para registrarlo si cuenta con el rol de administrador.
+Ingreso/consulta manual. Ofrece la opción de buscar el producto de forma manual . Útil si el escaneo no funciona.
+
+
+Otros:
+Navigation Bar: Se necesita para separar las páginas de una forma ordenada y clara.
+
+
