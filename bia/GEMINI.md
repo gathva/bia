@@ -2,8 +2,8 @@
 
 ## Fase 1: Cimientos de la App (Autenticación y Estructura)
 
-1.  **Autenticación de Usuarios:** Crear pantallas de inicio de sesión y registro con Firebase Authentication.
-2.  **Estructura de Navegación:** Implementar la `NavigationBar` principal (Dashboard, Scan, Chat).
+1.  **Autenticación de Usuarios:** Crear pantallas de inicio de sesión y registro con Firebase Authentication. ✅
+2.  **Estructura de Navegación:** Implementar la `NavigationBar` principal (Dashboard, Scan, Chat). ✅
 3.  **Modelos de Datos:** Definir las clases de Dart para `Producto`, `Bodega`, `Usuario` y `Movimiento` para interactuar con Firestore.
 
 ## Fase 2: Funcionalidad Principal (CRUD de Inventario)

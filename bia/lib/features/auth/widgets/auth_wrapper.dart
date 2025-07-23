@@ -1,6 +1,4 @@
-import 'package:bia/features/auth/screens/login_screen.dart';
-import 'package:bia/features/dashboard/screens/main_screen.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:bia/features/app/screens/app_shell.dart';
 import 'package:flutter/material.dart';
 
 class AuthWrapper extends StatelessWidget {
@@ -8,21 +6,9 @@ class AuthWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<User?>(
-      stream: FirebaseAuth.instance.authStateChanges(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Scaffold(
-            body: Center(child: CircularProgressIndicator()),
-          );
-        }
-
-        if (snapshot.hasData) {
-          return const MainScreen();
-        }
-
-        return const LoginScreen();
-      },
-    );
+    // Por ahora, siempre mostramos el AppShell.
+    // En el futuro, aquí irá la lógica para decidir si mostrar
+    // la pantalla de login o la app principal.
+    return const AppShell();
   }
 }
