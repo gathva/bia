@@ -69,9 +69,21 @@ La navegación principal se compondrá de tres secciones:
 *   **Logro:** Se implementó la funcionalidad de escaneo de códigos de barras. La aplicación puede **detectar un código**, **buscarlo en Firestore** y **navegar a la pantalla correcta**: a los detalles si el producto existe, o a un formulario si es nuevo.
 *   **Tecnología:** Flutter, `mobile_scanner`, Firestore.
 
-### Hito 4: Creación de Nuevos Productos (En Progreso)
-*   **Plan Actual:** Desarrollar el formulario para registrar un nuevo producto.
-    1.  **Diseñar la UI del Formulario:** Crear en `NewProductFormScreen` los campos para nombre, descripción, stock y ubicación. El código de barras estará pre-rellenado.
-    2.  **Implementar `addProduct` en `FirestoreService`:** Añadir la lógica para guardar el nuevo producto en la base de datos.
-    3.  **Lógica de Guardado en la UI:** Conectar el botón "Guardar" del formulario para que llame al servicio y persista los datos.
-    4.  **Feedback al Usuario:** Al guardar, navegar hacia atrás y mostrar una confirmación.
+### Hito 4: Creación de Nuevos Productos (Completado)
+*   **Logro:** Se ha implementado por completo el flujo de creación de nuevos productos. La app ahora presenta un formulario con validaciones cuando se escanea un código de barras no registrado, permitiendo al usuario añadir el nuevo producto (nombre, descripción, stock, ubicación) directamente a la base de datos de Firestore.
+*   **Tecnología:** Flutter, Firestore.
+
+### Hito 5: Implementación del Asistente de IA (En Progreso)
+*   **Plan Actual:** Desarrollar la funcionalidad del chat para interactuar con la IA.
+    1.  **Diseñar la UI del Chat (Completado):**
+        *   **Logro:** Se ha maquetado la interfaz de usuario de la pantalla de chat (`chat_screen.dart`). Incluye una lista que muestra la conversación con burbujas de mensaje diferenciadas para el usuario y el asistente, un campo de texto para la entrada de mensajes y un botón de envío. La UI es funcional y está lista para ser conectada a un servicio de IA.
+    2.  **Conectar con el servicio de IA (Completado):** 
+        *   **Logro:** Se ha implementado la lógica para enviar las preguntas del usuario a la IA (vía Gemini) y mostrar la respuesta en la interfaz. Se creó un `AIService` para manejar la comunicación con el modelo y se integró en `ChatScreen`.
+        *   **Tecnología:** Flutter, `google_generative_ai`, `flutter_dotenv`.
+    3.  **Implementar "Function Calling" (Pendiente):** Desarrollar el mecanismo para que la app interprete las respuestas JSON de la IA y ejecute las funciones correspondientes (ej: buscar productos, ver stock).
+
+### Mantenimiento: Corrección de Errores de Compilación (Completado)
+*   **Logro:** Se solucionaron varios errores críticos que impedían la compilación de la aplicación.
+    *   **Errores de Modelos:** Se corrigió la forma en que se asignaban los IDs de Firestore a los modelos `Product` y `Movement`, modificando el constructor `fromMap` para evitar la asignación a un campo `final`.
+    *   **Errores de `mobile_scanner`:** Se actualizaron las llamadas a la API del paquete `mobile_scanner` en `scan_screen.dart` para ser compatibles con la versión actual, solucionando problemas con el estado de la linterna/cámara y errores de nulidad.
+*   **Estado:** La aplicación ahora compila correctamente y está lista para continuar con el desarrollo.

@@ -27,7 +27,10 @@ class _ScanScreenState extends State<ScanScreen> {
             icon: ValueListenableBuilder(
               valueListenable: cameraController.torchState,
               builder: (context, state, child) {
-                switch (state) {
+                if (state == null) {
+                  return const Icon(Icons.flash_off, color: Colors.grey);
+                }
+                switch (state as TorchState) {
                   case TorchState.off:
                     return const Icon(Icons.flash_off, color: Colors.grey);
                   case TorchState.on:
@@ -43,7 +46,10 @@ class _ScanScreenState extends State<ScanScreen> {
             icon: ValueListenableBuilder(
               valueListenable: cameraController.cameraFacingState,
               builder: (context, state, child) {
-                switch (state) {
+                if (state == null) {
+                  return const Icon(Icons.camera_rear);
+                }
+                switch (state as CameraFacing) {
                   case CameraFacing.front:
                     return const Icon(Icons.camera_front);
                   case CameraFacing.back:

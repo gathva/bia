@@ -11,7 +11,7 @@ class FirestoreService {
     try {
       final snapshot = await _db.collection('products').get();
       final products = snapshot.docs
-          .map((doc) => Product.fromMap(doc.data() as Map<String, dynamic>)..id = doc.id)
+          .map((doc) => Product.fromMap(doc.data(), doc.id))
           .toList();
       return products;
     } catch (e) {
@@ -28,7 +28,7 @@ class FirestoreService {
           .where('stock_actual', isLessThan: threshold)
           .get();
       final products = snapshot.docs
-          .map((doc) => Product.fromMap(doc.data() as Map<String, dynamic>)..id = doc.id)
+          .map((doc) => Product.fromMap(doc.data(), doc.id))
           .toList();
       return products;
     } catch (e) {
@@ -46,7 +46,7 @@ class FirestoreService {
           .limit(limit)
           .get();
       final movements = snapshot.docs
-          .map((doc) => Movement.fromMap(doc.data() as Map<String, dynamic>)..id = doc.id)
+          .map((doc) => Movement.fromMap(doc.data(), doc.id))
           .toList();
       return movements;
     } catch (e) {
@@ -87,7 +87,7 @@ class FirestoreService {
 
       if (snapshot.docs.isNotEmpty) {
         final doc = snapshot.docs.first;
-        return Product.fromMap(doc.data() as Map<String, dynamic>)..id = doc.id;
+        return Product.fromMap(doc.data(), doc.id);
       } else {
         return null;
       }

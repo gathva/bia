@@ -60,9 +60,9 @@ class Product {
     };
   }
 
-  factory Product.fromMap(Map<String, dynamic> map) {
+  factory Product.fromMap(Map<String, dynamic> map, String documentId) {
     return Product(
-      id: map['id'] ?? '',
+      id: documentId,
       name: map['name'] ?? '',
       barcode: map['barcode'] ?? '',
       description: map['description'] ?? '',

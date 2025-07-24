@@ -52,9 +52,9 @@ class Movement {
     };
   }
 
-  factory Movement.fromMap(Map<String, dynamic> map) {
+  factory Movement.fromMap(Map<String, dynamic> map, String documentId) {
     return Movement(
-      id: map['id'] ?? '',
+      id: documentId,
       productId: map['productId'] ?? '',
       type: MovementType.values.firstWhere(
         (e) => e.toString() == map['type'],
