@@ -25,17 +25,15 @@ class _ScanScreenState extends State<ScanScreen> {
           IconButton(
             color: Colors.white,
             icon: ValueListenableBuilder<TorchState>(
-              valueListenable: cameraController.torchState as ValueNotifier<TorchState>,
+              valueListenable: cameraController.torchState,
               builder: (context, state, child) {
                 switch (state) {
                   case TorchState.off:
                     return const Icon(Icons.flash_off, color: Colors.grey);
                   case TorchState.on:
                     return const Icon(Icons.flash_on, color: Colors.yellow);
-                  case TorchState.auto:
-                    return const Icon(Icons.flash_auto, color: Colors.blue);
-                  case TorchState.unavailable:
-                    return const Icon(Icons.flash_off, color: Colors.red);
+                  default:
+                    return const Icon(Icons.no_flash, color: Colors.grey);
                 }
               },
             ),
@@ -45,17 +43,15 @@ class _ScanScreenState extends State<ScanScreen> {
           IconButton(
             color: Colors.white,
             icon: ValueListenableBuilder<CameraFacing>(
-              valueListenable: cameraController.cameraFacingState as ValueNotifier<CameraFacing>,
+              valueListenable: cameraController.cameraFacingState,
               builder: (context, state, child) {
                 switch (state) {
                   case CameraFacing.front:
                     return const Icon(Icons.camera_front);
                   case CameraFacing.back:
                     return const Icon(Icons.camera_rear);
-                  case CameraFacing.external:
-                    return const Icon(Icons.camera);
-                  case CameraFacing.unknown:
-                    return const Icon(Icons.camera_alt);
+                  default:
+                    return const Icon(Icons.camera, color: Colors.grey);
                 }
               },
             ),
@@ -77,21 +73,21 @@ class _ScanScreenState extends State<ScanScreen> {
             final String? code = barcodes.first.rawValue;
             if (code != null) {
               final product = await _firestoreService.getProductByBarcode(code);
-              if (mounted) { // Verificar si el widget todavía está en el árbol
+              if (mounted) {
                 if (product != null) {
-                  // Producto encontrado, navegar a detalles
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => ProductDetailScreen(product: product),
+                      builder: (context) =>
+                          ProductDetailScreen(product: product),
                     ),
                   );
                 } else {
-                  // Producto no encontrado, navegar a formulario
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => NewProductFormScreen(barcode: code),
+                      builder: (context) =>
+                          NewProductFormScreen(barcode: code),
                     ),
                   );
                 }
@@ -99,9 +95,8 @@ class _ScanScreenState extends State<ScanScreen> {
             }
           }
 
-          // Pequeño delay para evitar múltiples escaneos y dar tiempo a la navegación
           Future.delayed(const Duration(seconds: 3), () {
-            if(mounted){
+            if (mounted) {
               setState(() {
                 _isProcessing = false;
               });

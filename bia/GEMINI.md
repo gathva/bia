@@ -84,5 +84,20 @@ La navegación principal se compondrá de tres secciones:
 ### Mantenimiento: Corrección de Errores de Compilación (Completado)
 *   **Logro:** Se solucionaron varios errores críticos que impedían la compilación de la aplicación.
     *   **Errores de Modelos:** Se corrigió la forma en que se asignaban los IDs de Firestore a los modelos `Product` y `Movement`, modificando el constructor `fromMap` para evitar la asignación a un campo `final`.
-    *   **Errores de `mobile_scanner`:** Se actualizaron las llamadas a la API del paquete `mobile_scanner` en `scan_screen.dart` para ser compatibles con la versión actual, solucionando problemas con el estado de la linterna/cámara y errores de nulidad.
 *   **Estado:** La aplicación ahora compila correctamente y está lista para continuar con el desarrollo.
+
+### Problema Actual: Errores de `mobile_scanner` en `scan_screen.dart` (En Progreso)
+*   **Descripción:** La aplicación no compila debido a errores relacionados con el paquete `mobile_scanner` en `lib/features/scan/screens/scan_screen.dart`. Los errores principales son:
+    *   `The getter 'torchState' isn't defined for the class 'MobileScannerController'.`
+    *   `The getter 'cameraFacingState' isn't defined for the class 'MobileScannerController'.`
+    *   Errores de coincidencia exhaustiva en `switch` para `TorchState` (ej. `TorchState.unavailable`) y `CameraFacing` (ej. `CameraFacing.external`).
+*   **Pasos de Depuración Realizados:**
+    1.  **Identificación inicial de errores:** Se detectaron los errores de `torchState` y `cameraFacingState` y la falta de casos en los `switch`.
+    2.  **Primer intento de corrección:** Se añadieron los casos `TorchState.auto`, `TorchState.unavailable`, `CameraFacing.external` y `CameraFacing.unknown` en `scan_screen.dart`.
+    3.  **Actualización de dependencia:** Se actualizó la versión de `mobile_scanner` en `pubspec.yaml` de `^5.1.1` a `^7.0.1`.
+    4.  **Limpieza y obtención de dependencias:** Se ejecutaron `flutter clean` y `flutter pub get` varias veces para asegurar la descarga de la versión correcta y limpiar la caché.
+    5.  **Verificación de `flutter doctor`:** Se confirmó que la instalación de Flutter está en perfecto estado y no hay problemas de entorno.
+    6.  **Verificación de `pubspec.lock`:** Se confirmó que la versión `7.0.1` de `mobile_scanner` está siendo utilizada.
+    7.  **Casting explícito:** Se añadió un casting explícito a `ValueNotifier<TorchState>` y `ValueNotifier<CameraFacing>` en `scan_screen.dart` para forzar el reconocimiento de tipos.
+    8.  **Eliminación de caché de pub:** Se eliminó completamente la caché de pub (`~/.pub-cache`) y se volvió a ejecutar `flutter pub get`.
+*   **Estado Actual:** A pesar de todos los pasos anteriores, los errores persisten, lo que sugiere un problema más complejo con la integración del paquete o un problema de caché muy persistente. La aplicación no se puede compilar ni ejecutar en este momento.
