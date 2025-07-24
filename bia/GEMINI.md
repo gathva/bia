@@ -73,14 +73,13 @@ La navegación principal se compondrá de tres secciones:
 *   **Logro:** Se ha implementado por completo el flujo de creación de nuevos productos. La app ahora presenta un formulario con validaciones cuando se escanea un código de barras no registrado, permitiendo al usuario añadir el nuevo producto (nombre, descripción, stock, ubicación) directamente a la base de datos de Firestore.
 *   **Tecnología:** Flutter, Firestore.
 
-### Hito 5: Implementación del Asistente de IA (En Progreso)
-*   **Plan Actual:** Desarrollar la funcionalidad del chat para interactuar con la IA.
-    1.  **Diseñar la UI del Chat (Completado):**
-        *   **Logro:** Se ha maquetado la interfaz de usuario de la pantalla de chat (`chat_screen.dart`). Incluye una lista que muestra la conversación con burbujas de mensaje diferenciadas para el usuario y el asistente, un campo de texto para la entrada de mensajes y un botón de envío. La UI es funcional y está lista para ser conectada a un servicio de IA.
-    2.  **Conectar con el servicio de IA (Completado):** 
-        *   **Logro:** Se ha implementado la lógica para enviar las preguntas del usuario a la IA (vía Gemini) y mostrar la respuesta en la interfaz. Se creó un `AIService` para manejar la comunicación con el modelo y se integró en `ChatScreen`.
-        *   **Tecnología:** Flutter, `google_generative_ai`, `flutter_dotenv`.
-    3.  **Implementar "Function Calling" (Pendiente):** Desarrollar el mecanismo para que la app interprete las respuestas JSON de la IA y ejecute las funciones correspondientes (ej: buscar productos, ver stock).
+### Hito 5: Implementación del Asistente de IA (Completado)
+*   **Logro:** Se ha implementado por completo el asistente de IA con capacidad de "Function Calling". La IA puede interpretar las solicitudes del usuario y utilizar un conjunto de herramientas para interactuar con la base de datos de Firestore. 
+*   **Herramientas Implementadas:**
+    *   `search_product_by_name`: Busca productos por su nombre.
+    *   `get_low_stock_products`: Obtiene una lista de productos con bajo stock.
+    *   `get_product_stock`: Consulta el stock de un producto específico.
+*   **Tecnología:** Flutter, `google_generative_ai`, `flutter_dotenv`, Firestore.
 
 ### Mantenimiento: Corrección de Errores de Compilación (Completado)
 *   **Logro:** Se solucionaron varios errores críticos que impedían la compilación de la aplicación.

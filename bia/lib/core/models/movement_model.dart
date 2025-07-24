@@ -68,7 +68,7 @@ class Movement {
 
   String toJson() => json.encode(toMap());
 
-  factory Movement.fromJson(String source) => Movement.fromMap(json.decode(source));
+  factory Movement.fromJson(String source, String documentId) => Movement.fromMap(json.decode(source), documentId);
 
   @override
   String toString() {

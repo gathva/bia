@@ -96,4 +96,37 @@ class FirestoreService {
       return null;
     }
   }
+
+  // Buscar un producto por su nombre
+  Future<List<Product>> searchProductByName(String name) async {
+    try {
+      final snapshot = await _db
+          .collection('products')
+          .where('name', isGreaterThanOrEqualTo: name)
+          .where('name', isLessThanOrEqualTo: name + '\uf8ff')
+          .get();
+      final products = snapshot.docs
+          .map((doc) => Product.fromMap(doc.data(), doc.id))
+          .toList();
+      return products;
+    } catch (e) {
+      print('Error searching product by name: $e');
+      return [];
+    }
+  }
+
+  // Obtener el stock de un producto específico
+  Future<int?> getProductStock(String productName) async {
+    try {
+      final products = await searchProductByName(productName);
+      if (products.isNotEmpty) {
+        return products.first.stockActual;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      print('Error getting product stock: $e');
+      return null;
+    }
+  }
 }

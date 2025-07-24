@@ -24,17 +24,18 @@ class _ScanScreenState extends State<ScanScreen> {
         actions: [
           IconButton(
             color: Colors.white,
-            icon: ValueListenableBuilder(
-              valueListenable: cameraController.torchState,
+            icon: ValueListenableBuilder<TorchState>(
+              valueListenable: cameraController.torchState as ValueNotifier<TorchState>,
               builder: (context, state, child) {
-                if (state == null) {
-                  return const Icon(Icons.flash_off, color: Colors.grey);
-                }
-                switch (state as TorchState) {
+                switch (state) {
                   case TorchState.off:
                     return const Icon(Icons.flash_off, color: Colors.grey);
                   case TorchState.on:
                     return const Icon(Icons.flash_on, color: Colors.yellow);
+                  case TorchState.auto:
+                    return const Icon(Icons.flash_auto, color: Colors.blue);
+                  case TorchState.unavailable:
+                    return const Icon(Icons.flash_off, color: Colors.red);
                 }
               },
             ),
@@ -43,17 +44,18 @@ class _ScanScreenState extends State<ScanScreen> {
           ),
           IconButton(
             color: Colors.white,
-            icon: ValueListenableBuilder(
-              valueListenable: cameraController.cameraFacingState,
+            icon: ValueListenableBuilder<CameraFacing>(
+              valueListenable: cameraController.cameraFacingState as ValueNotifier<CameraFacing>,
               builder: (context, state, child) {
-                if (state == null) {
-                  return const Icon(Icons.camera_rear);
-                }
-                switch (state as CameraFacing) {
+                switch (state) {
                   case CameraFacing.front:
                     return const Icon(Icons.camera_front);
                   case CameraFacing.back:
                     return const Icon(Icons.camera_rear);
+                  case CameraFacing.external:
+                    return const Icon(Icons.camera);
+                  case CameraFacing.unknown:
+                    return const Icon(Icons.camera_alt);
                 }
               },
             ),
