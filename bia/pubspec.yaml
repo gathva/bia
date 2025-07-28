@@ -29,6 +29,7 @@ dependencies:
 
   # AI
   google_generative_ai: ^0.4.0
+  http: ^1.4.0
 
 
 dev_dependencies:
@@ -38,3 +39,5 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - .env

@@ -39,9 +39,12 @@ class _ChatScreenState extends State<ChatScreen> {
     try {
       final response = await _aiService.sendMessage(text);
 
-      if (response.containsKey('tool')) {
+      // La IA puede devolver 'tool' o 'tool_name'. Se comprueban ambas.
+      final String? toolName = response['tool'] ?? response['tool_name'];
+
+      if (toolName != null) {
         // La IA ha solicitado una herramienta
-        await _executeTool(response['tool'], response['params']);
+        await _executeTool(toolName, response['params'] ?? {});
       } else if (response.containsKey('response')) {
         // Es una respuesta conversacional
         setState(() {
@@ -118,6 +121,32 @@ class _ChatScreenState extends State<ChatScreen> {
           ),
           if (_isTyping) _buildTypingIndicator(), // Muestra el indicador si la IA está "escribiendo"
           const Divider(height: 1.0),
+          // Sugerencias rápidas
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+            child: Wrap(
+              spacing: 8.0, // Espacio horizontal entre los chips
+              runSpacing: 4.0, // Espacio vertical entre las líneas de chips
+              children: [
+                ActionChip(
+                  label: const Text('Productos bajo stock'),
+                  onPressed: () => _handleSubmitted('Qué productos tienen bajo stock'),
+                ),
+                ActionChip(
+                  label: const Text('Buscar producto'),
+                  onPressed: () => _handleSubmitted('Buscar producto'),
+                ),
+                ActionChip(
+                  label: const Text('Stock de X'),
+                  onPressed: () => _handleSubmitted('Cuál es el stock de [nombre del producto]'),
+                ),
+                ActionChip(
+                  label: const Text('Últimos movimientos'),
+                  onPressed: () => _handleSubmitted('Cuáles fueron los últimos movimientos'),
+                ),
+              ],
+            ),
+          ),
           // Campo de entrada de texto
           _buildTextComposer(),
         ],

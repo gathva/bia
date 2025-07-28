@@ -36,6 +36,7 @@ La navegación principal se compondrá de tres secciones:
 
 -   **Colección `productos`:**
     -   `nombre` (String)
+    -   `marca` (String)
     -   `codigo_barras` (String)
     -   `descripcion` (String)
     -   `stock_actual` (Number)
@@ -83,21 +84,56 @@ La navegación principal se compondrá de tres secciones:
 
 ### Mantenimiento: Corrección de Errores de Compilación (Completado)
 *   **Logro:** Se solucionaron varios errores críticos que impedían la compilación de la aplicación.
+    *   **Error de `minSdkVersion`:** Se aumentó la versión mínima de SDK de Android a 23 en `android/app/build.gradle.kts` para resolver conflictos de dependencias con `firebase-auth`.
+    *   **Error de `.env` no encontrado:** Se registró el archivo `.env` como un asset en `pubspec.yaml` para que sea accesible en tiempo de ejecución.
     *   **Errores de Modelos:** Se corrigió la forma en que se asignaban los IDs de Firestore a los modelos `Product` y `Movement`, modificando el constructor `fromMap` para evitar la asignación a un campo `final`.
 *   **Estado:** La aplicación ahora compila correctamente y está lista para continuar con el desarrollo.
 
-### Problema Actual: Errores de `mobile_scanner` en `scan_screen.dart` (En Progreso)
-*   **Descripción:** La aplicación no compila debido a errores relacionados con el paquete `mobile_scanner` en `lib/features/scan/screens/scan_screen.dart`. Los errores principales son:
-    *   `The getter 'torchState' isn't defined for the class 'MobileScannerController'.`
-    *   `The getter 'cameraFacingState' isn't defined for the class 'MobileScannerController'.`
-    *   Errores de coincidencia exhaustiva en `switch` para `TorchState` (ej. `TorchState.unavailable`) y `CameraFacing` (ej. `CameraFacing.external`).
-*   **Pasos de Depuración Realizados:**
-    1.  **Identificación inicial de errores:** Se detectaron los errores de `torchState` y `cameraFacingState` y la falta de casos en los `switch`.
-    2.  **Primer intento de corrección:** Se añadieron los casos `TorchState.auto`, `TorchState.unavailable`, `CameraFacing.external` y `CameraFacing.unknown` en `scan_screen.dart`.
-    3.  **Actualización de dependencia:** Se actualizó la versión de `mobile_scanner` en `pubspec.yaml` de `^5.1.1` a `^7.0.1`.
-    4.  **Limpieza y obtención de dependencias:** Se ejecutaron `flutter clean` y `flutter pub get` varias veces para asegurar la descarga de la versión correcta y limpiar la caché.
-    5.  **Verificación de `flutter doctor`:** Se confirmó que la instalación de Flutter está en perfecto estado y no hay problemas de entorno.
-    6.  **Verificación de `pubspec.lock`:** Se confirmó que la versión `7.0.1` de `mobile_scanner` está siendo utilizada.
-    7.  **Casting explícito:** Se añadió un casting explícito a `ValueNotifier<TorchState>` y `ValueNotifier<CameraFacing>` en `scan_screen.dart` para forzar el reconocimiento de tipos.
-    8.  **Eliminación de caché de pub:** Se eliminó completamente la caché de pub (`~/.pub-cache`) y se volvió a ejecutar `flutter pub get`.
-*   **Estado Actual:** A pesar de todos los pasos anteriores, los errores persisten, lo que sugiere un problema más complejo con la integración del paquete o un problema de caché muy persistente. La aplicación no se puede compilar ni ejecutar en este momento.
+### Hito 6: Corrección de `mobile_scanner` (Completado)
+*   **Logro:** Se solucionó un error de compilación crítico en `scan_screen.dart` causado por cambios drásticos en la API del paquete `mobile_scanner` (versión 7.0.1).
+*   **Estado:** La pantalla de escaneo vuelve a ser funcional y la aplicación compila correctamente.
+
+### Hito 7: Refactorización y Mejoras de Funcionalidad (Completado)
+*   **Logro:** Se abordaron varios puntos clave basados en el feedback del usuario para mejorar la funcionalidad y robustez de la aplicación.
+*   **Detalles:**
+    *   **Activación de Firestore:** Se guió al usuario para habilitar la API de Cloud Firestore y crear la base de datos en modo de prueba, solucionando el error `PERMISSION_DENIED` que impedía guardar nuevos productos.
+    *   **Campo "Marca" añadido:** Se modificó el modelo de datos `Product`, el formulario de creación y la lógica de guardado para incluir la marca del producto, un campo esencial para la gestión de inventario.
+    *   **Migración a OpenRouter:** Se refactorizó el `AIService` para dejar de usar la API de Gemini y conectarse a OpenRouter. Esto permite una mayor flexibilidad para cambiar de modelo de IA y controlar los costos. El servicio ahora es fácilmente configurable para probar diferentes modelos.
+*   **Tecnología:** Flutter, Firestore, `http`, OpenRouter API.
+
+### Hito 8: Lógica de Movimientos de Stock (Completado)
+*   **Logro:** Se implementó la funcionalidad completa para registrar entradas y salidas de stock desde la pantalla de detalles del producto.
+*   **Detalles:**
+    *   **Lógica Transaccional:** Se creó un método en `FirestoreService` que utiliza una transacción de Firestore para registrar el movimiento en la colección `movements` y actualizar el `stock_actual` en la colección `products` de forma atómica, garantizando la integridad de los datos.
+    *   **UI/UX:** Se implementó un diálogo (`AlertDialog`) en la pantalla de detalles que permite al usuario introducir la cantidad para la entrada o salida, con validaciones para prevenir errores (ej. sacar más stock del disponible).
+*   **Tecnología:** Flutter, Firestore Transactions.
+
+---
+
+## Plan de Acción Actual
+
+### Fase 1: Estabilidad y Funcionalidad Central (Completado)
+
+*   **[COMPLETADO] Paso 1.1: Actualización de Estado del Dashboard:**
+    *   **Objetivo:** Hacer que el Dashboard se actualice automáticamente después de registrar un nuevo producto o un movimiento de stock.
+    *   **Acción:** Se modificó el `DashboardProvider` para exponer un método `reloadData()`. Este método ahora es llamado desde `NewProductFormScreen` y `ProductDetailScreen` después de una operación exitosa, forzando la recarga de los datos y actualizando la UI.
+
+*   **[COMPLETADO] Paso 1.2: Depuración del Chat de IA:**
+    *   **Objetivo:** Solucionar la intermitencia del chat y asegurar que las llamadas a herramientas (ej. "buscar productos con bajo stock") funcionen de manera fiable.
+    *   **Acción:** Se mejoró el prompt del sistema en `AIService` para guiar a la IA a usar el formato JSON esperado (`"tool"` y `"params"`). Se hizo el código de `ChatScreen` más robusto para manejar tanto `"tool"` como `"tool_name"` en la respuesta de la IA. Se eliminaron los logs de depuración.
+
+### Fase 2: Mejoras de Experiencia de Usuario (UX) (Completado)
+
+*   **[COMPLETADO] Paso 2.1: Dashboard Interactivo:**
+    *   **Objetivo:** Permitir que el usuario pueda hacer clic en las tarjetas de estadísticas ("Total de Productos", "Bajo Stock") para ver una lista detallada.
+    *   **Acción:** Se creó la pantalla `ProductListViewScreen` para mostrar listas de productos. Se modificó `dashboard_screen.dart` para navegar a esta pantalla al hacer clic en las estadísticas, pasando la lista de productos correspondiente.
+
+*   **[COMPLETADO] Paso 2.2: Sugerencias en el Chat:**
+    *   **Objetivo:** Añadir botones con preguntas frecuentes en la pantalla del chat para guiar al usuario.
+    *   **Acción:** Se añadió una `Row` de `ActionChip`s encima del campo de texto del chat con acciones predefinidas como "Bajo stock" o "Buscar producto".
+
+### Fase 3: Nuevas Funcionalidades (Completado)
+
+*   **[COMPLETADO] Paso 3.1: Ingreso Manual de Productos:**
+    *   **Objetivo:** Ofrecer una alternativa al escaneo de códigos de barras.
+    *   **Acción:** Se añadió un botón "Ingreso Manual" en la `ScanScreen`. Al presionarlo, se muestra un `AlertDialog` pidiendo al usuario que escriba el código de barras. Si el código ya existe, se navega a los detalles; si no, al formulario de nuevo producto.

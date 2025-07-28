@@ -1,8 +1,10 @@
 
 import 'package:bia/core/models/product_model.dart';
 import 'package:bia/core/services/firestore_service.dart';
+import 'package:bia/features/dashboard/providers/dashboard_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class NewProductFormScreen extends StatefulWidget {
   final String barcode;
@@ -16,6 +18,7 @@ class NewProductFormScreen extends StatefulWidget {
 class _NewProductFormScreenState extends State<NewProductFormScreen> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
+  final _brandController = TextEditingController(); // <-- Añadido
   final _descriptionController = TextEditingController();
   final _stockController = TextEditingController();
   final _locationController = TextEditingController();
@@ -26,6 +29,7 @@ class _NewProductFormScreenState extends State<NewProductFormScreen> {
   @override
   void dispose() {
     _nameController.dispose();
+    _brandController.dispose(); // <-- Añadido
     _descriptionController.dispose();
     _stockController.dispose();
     _locationController.dispose();
@@ -46,6 +50,7 @@ class _NewProductFormScreenState extends State<NewProductFormScreen> {
       final newProduct = Product(
         id: '', // Firestore generará el ID
         name: _nameController.text,
+        brand: _brandController.text, // <-- Añadido
         barcode: widget.barcode,
         description: _descriptionController.text,
         stockActual: int.parse(_stockController.text),
@@ -56,7 +61,10 @@ class _NewProductFormScreenState extends State<NewProductFormScreen> {
 
       await _firestoreService.addProduct(newProduct);
 
+      // Notificar al DashboardProvider para que recargue los datos
       if (mounted) {
+        Provider.of<DashboardProvider>(context, listen: false).reloadData();
+
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Producto guardado con éxito')),
         );
@@ -113,6 +121,23 @@ class _NewProductFormScreenState extends State<NewProductFormScreen> {
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Por favor, ingrese un nombre';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 16),
+
+              // Campo de Marca
+              TextFormField(
+                controller: _brandController,
+                decoration: const InputDecoration(
+                  labelText: 'Marca del Producto',
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.business_outlined),
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Por favor, ingrese una marca';
                   }
                   return null;
                 },

@@ -1,6 +1,8 @@
 
 import 'package:bia/features/dashboard/providers/dashboard_provider.dart';
 import 'package:bia/core/models/movement_model.dart';
+import 'package:bia/core/models/product_model.dart'; // Importar Product
+import 'package:bia/features/dashboard/screens/product_list_view_screen.dart'; // Importar la nueva pantalla
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -24,7 +26,7 @@ class DashboardScreen extends StatelessWidget {
           }
 
           return RefreshIndicator(
-            onRefresh: () => provider.fetchDashboardData(),
+            onRefresh: () => provider.reloadData(),
             child: ListView(
               padding: const EdgeInsets.all(16.0),
               children: [
@@ -56,8 +58,8 @@ class DashboardScreen extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        _buildStatItem(context, Icons.warning_amber_rounded, 'Bajo Stock', provider.lowStockProducts.length.toString()),
-                        _buildStatItem(context, Icons.inventory_2_outlined, 'Total Productos', provider.totalProductCount.toString()),
+                        _buildStatItem(context, Icons.warning_amber_rounded, 'Bajo Stock', provider.lowStockProducts.length.toString(), products: provider.lowStockProducts),
+                        _buildStatItem(context, Icons.inventory_2_outlined, 'Total Productos', provider.totalProductCount.toString(), products: provider.allProducts),
                       ],
                     ),
                   ),
@@ -118,16 +120,28 @@ class DashboardScreen extends StatelessWidget {
   }
 
   // Widget para construir cada item de estadística
-  static Widget _buildStatItem(BuildContext context, IconData icon, String label, String value) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(icon, size: 30, color: Theme.of(context).primaryColor),
-        const SizedBox(height: 8),
-        Text(value, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-        const SizedBox(height: 4),
-        Text(label, style: const TextStyle(color: Colors.grey)),
-      ],
+  static Widget _buildStatItem(BuildContext context, IconData icon, String label, String value, {required List<Product> products}) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => ProductListViewScreen(
+              title: label,
+              products: products,
+            ),
+          ),
+        );
+      },
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 30, color: Theme.of(context).primaryColor),
+          const SizedBox(height: 8),
+          Text(value, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 4),
+          Text(label, style: const TextStyle(color: Colors.grey)),
+        ],
+      ),
     );
   }
 

@@ -15,13 +15,14 @@ class DashboardProvider extends ChangeNotifier {
   List<Product> get lowStockProducts => _lowStockProducts;
   List<Movement> get recentMovements => _recentMovements;
   int get totalProductCount => _allProducts.length; // Getter para el total
+  List<Product> get allProducts => _allProducts; // Getter para acceder a todos los productos
   bool get isLoading => _isLoading;
 
   DashboardProvider() {
-    fetchDashboardData();
+    reloadData();
   }
 
-  Future<void> fetchDashboardData() async {
+  Future<void> reloadData() async {
     _isLoading = true;
     notifyListeners();
 

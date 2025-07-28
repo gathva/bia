@@ -68,12 +68,61 @@ class FirestoreService {
 
   // Actualizar un producto existente
   Future<void> updateProduct(Product product) async {
-    // TODO: Implementar la lógica para actualizar un producto
+    try {
+      await _db.collection('products').doc(product.id).update(product.toMap());
+    } catch (e) {
+      print('Error updating product: $e');
+      rethrow;
+    }
   }
 
   // Registrar un nuevo movimiento (entrada/salida)
   Future<void> addMovement(Movement movement) async {
-    // TODO: Implementar la lógica para registrar un movimiento
+    try {
+      await _db.collection('movements').add(movement.toMap());
+    } catch (e) {
+      print('Error adding movement: $e');
+      rethrow;
+    }
+  }
+
+  // Registrar un movimiento y actualizar el stock del producto en una transacción
+  Future<void> addMovementAndUpdateStock(Movement movement) async {
+    final productRef = _db.collection('products').doc(movement.productId);
+    final movementRef = _db.collection('movements').doc(); // Nuevo documento para el movimiento
+
+    try {
+      await _db.runTransaction((transaction) async {
+        // 1. Obtener el documento del producto
+        final productSnapshot = await transaction.get(productRef);
+
+        if (!productSnapshot.exists) {
+          throw Exception("El producto no existe!");
+        }
+
+        // 2. Calcular el nuevo stock
+        final currentStock = productSnapshot.data()!['stock_actual'] as int;
+        final newStock = movement.type == MovementType.entry
+            ? currentStock + movement.quantity
+            : currentStock - movement.quantity;
+
+        if (newStock < 0) {
+          throw Exception('No hay suficiente stock para esta salida.');
+        }
+
+        // 3. Actualizar el stock del producto y la fecha de actualización
+        transaction.update(productRef, {
+          'stock_actual': newStock,
+          'updatedAt': FieldValue.serverTimestamp(), // Usar la hora del servidor
+        });
+
+        // 4. Registrar el nuevo movimiento
+        transaction.set(movementRef, movement.toMap());
+      });
+    } catch (e) {
+      print('Error en la transacción de movimiento: $e');
+      rethrow;
+    }
   }
 
   // Buscar un producto por su código de barras

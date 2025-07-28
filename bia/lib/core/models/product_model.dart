@@ -7,6 +7,7 @@ import 'package:flutter/foundation.dart';
 class Product {
   final String id;
   final String name;
+  final String brand; // <-- Añadido
   final String barcode;
   final String description;
   final int stockActual;
@@ -17,6 +18,7 @@ class Product {
   Product({
     required this.id,
     required this.name,
+    required this.brand, // <-- Añadido
     required this.barcode,
     required this.description,
     required this.stockActual,
@@ -28,6 +30,7 @@ class Product {
   Product copyWith({
     String? id,
     String? name,
+    String? brand, // <-- Añadido
     String? barcode,
     String? description,
     int? stockActual,
@@ -38,6 +41,7 @@ class Product {
     return Product(
       id: id ?? this.id,
       name: name ?? this.name,
+      brand: brand ?? this.brand, // <-- Añadido
       barcode: barcode ?? this.barcode,
       description: description ?? this.description,
       stockActual: stockActual ?? this.stockActual,
@@ -51,6 +55,7 @@ class Product {
     return {
       'id': id,
       'name': name,
+      'brand': brand, // <-- Añadido
       'barcode': barcode,
       'description': description,
       'stock_actual': stockActual,
@@ -64,6 +69,7 @@ class Product {
     return Product(
       id: documentId,
       name: map['name'] ?? '',
+      brand: map['brand'] ?? '', // <-- Añadido
       barcode: map['barcode'] ?? '',
       description: map['description'] ?? '',
       stockActual: map['stock_actual']?.toInt() ?? 0,
@@ -79,7 +85,7 @@ class Product {
 
   @override
   String toString() {
-    return 'Product(id: $id, name: $name, barcode: $barcode, description: $description, stockActual: $stockActual, location: $location, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'Product(id: $id, name: $name, brand: $brand, barcode: $barcode, description: $description, stockActual: $stockActual, location: $location, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -89,6 +95,7 @@ class Product {
     return other is Product &&
       other.id == id &&
       other.name == name &&
+      other.brand == brand && // <-- Añadido
       other.barcode == barcode &&
       other.description == description &&
       other.stockActual == stockActual &&
@@ -101,6 +108,7 @@ class Product {
   int get hashCode {
     return id.hashCode ^
       name.hashCode ^
+      brand.hashCode ^ // <-- Añadido
       barcode.hashCode ^
       description.hashCode ^
       stockActual.hashCode ^
