@@ -87,6 +87,7 @@ La navegación principal se compondrá de tres secciones:
     *   **Error de `minSdkVersion`:** Se aumentó la versión mínima de SDK de Android a 23 en `android/app/build.gradle.kts` para resolver conflictos de dependencias con `firebase-auth`.
     *   **Error de `.env` no encontrado:** Se registró el archivo `.env` como un asset en `pubspec.yaml` para que sea accesible en tiempo de ejecución.
     *   **Errores de Modelos:** Se corrigió la forma en que se asignaban los IDs de Firestore a los modelos `Product` y `Movement`, modificando el constructor `fromMap` para evitar la asignación a un campo `final`.
+    *   **Error de `allProducts` no definido:** Se añadió un getter `allProducts` en `DashboardProvider` para permitir el acceso público a la lista de todos los productos, resolviendo un error de compilación en `dashboard_screen.dart`.
 *   **Estado:** La aplicación ahora compila correctamente y está lista para continuar con el desarrollo.
 
 ### Hito 6: Corrección de `mobile_scanner` (Completado)
